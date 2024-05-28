@@ -1,21 +1,34 @@
 <script setup>
+
+//交换机图片https://s3.bmp.ovh/imgs/2024/05/28/411f113ead146b9e.png
+//主机图片symbol:"image://https://s3.bmp.ovh/imgs/2024/05/28/1ec928c28a0248f0.png",
 import myEcharts from '@/components/echarts/myEcharts.vue';
+import addNodeDialog from '@/components/dialog/addNodeDialog.vue';
+import addLinkDialog from '@/components/dialog/addLinkDialog.vue';
+import lineCharts from '@/components/echarts/lineCharts.vue';
 import { ref } from 'vue';
 
-const symbolSize = ref(20)
 const data = ref([
-  [40, -10],
-  [-30, -5],
-  [-76.5, 20],
-  [-63.5, 40],
-  [-22.1, 50]
+  { 
+    name: 'Switch 1',
+    symbol:"image://https://s3.bmp.ovh/imgs/2024/05/28/411f113ead146b9e.png",
+    symbolSize: [30, 30]
+  },
+  { 
+    name: 'Host 1' ,
+    symbol:"image://https://s3.bmp.ovh/imgs/2024/05/28/1ec928c28a0248f0.png",
+    symbolSize: [30, 30]
+  },
+  { 
+    name: 'Host 2' ,
+    symbol:"image://https://s3.bmp.ovh/imgs/2024/05/28/1ec928c28a0248f0.png",
+    symbolSize: [30, 30]
+  }
 ])
-const desc = ref([
-  'A',
-  'B',
-  'C',
-  'D',
-  'E'
+
+const links = ref([
+  { source: 'Switch 1', target: 'Host 1' },
+  { source: 'Switch 1', target: 'Host 2' }
 ])
 
 
@@ -23,10 +36,44 @@ const desc = ref([
 </script>
 
 <template>
-  <myEcharts :symbloSize="symbolSize" :data="data" :desc="desc"/>
+  <div class="contain">
+    <h2 style="">拓扑图</h2>
+    <ul class="table">
+      <myEcharts :data="data" :links="links" />
+    </ul>
+    <h1>
+      <addNodeDialog :data="data" />
+      <addLinkDialog :data="data" :links="links" />
+    </h1>
+  </div>
+  <div class="dataZone">
+    <lineCharts data="line1"/>
+    <lineCharts data="line2"/>
+  </div>
 </template>
 
 
 <style scoped>
-/* 在这里定义组件的样式 */
+.contain {
+  width: 600px;
+  height: 70vh;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: left;
+  align-items: center;
+}
+.table{
+  border: #c3c3c3 1px solid;
+}
+h1{
+  width: 500px;
+  height: 100px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.line{
+  display: block;
+}
+
 </style>
