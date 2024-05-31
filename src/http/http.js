@@ -2,12 +2,13 @@ import axios from 'axios'
 
 // 创建axios实例
 const httpInstance = axios.create({
-  baseURL: 'http://10.198.140.55',
+  baseURL: 'http://10.133.72.190',
   timeout: 5000
 })
 
 // axios请求拦截器
 httpInstance.interceptors.request.use(config => {
+  config.headers['Content-Type'] = 'application/json;charset=utf-8';
   return config
 }, e => Promise.reject(e))
 

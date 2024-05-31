@@ -6,7 +6,7 @@ import myEcharts from '@/components/echarts/myEcharts.vue';
 import addNodeDialog from '@/components/dialog/addNodeDialog.vue';
 import addLinkDialog from '@/components/dialog/addLinkDialog.vue';
 import lineCharts from '@/components/echarts/lineCharts.vue';
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 
 const data = ref([
   { 
@@ -50,19 +50,34 @@ const links = ref([
   { source: 'Switch 3', target: 'Host 3' },
 ])
 
-import { getNetFlow } from '@/apis/netFlow'
+let lossRate = ref(0)
 
-const getNetFlowData = async () => {
-  const res = await getNetFlow()
-  console.log(res)
-  return res
+const getData = () => {
+  fetch('http://10.133.72.190:8000/decode')
+  .then(response => {
+    // 检查响应是否成功
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    // 解析响应数据为 JSON 格式
+    return response.json();
+  })
+  .then(data => {
+    // 处理接收到的数据
+    console.log(data);
+    lossRate.value=data[2]
+    console.log(lossRate.value)
+  })
+  .catch(error => {
+    // 处理请求错误
+    console.error('There was a problem with your fetch operation:', error);
+  });
 }
 
-onMounted(()=>{
-  getNetFlowData().then(res => {
-    console.log(res)
-  })
-})
+setInterval(() => {
+  getData()
+}, 5000);
+
 
 
 </script>
@@ -73,15 +88,14 @@ onMounted(()=>{
     <ul class="table">
       <myEcharts :data="data" :links="links" />
     </ul>
-    <h1>
-      <addNodeDialog :data="data" />
-      <addLinkDialog :data="data" :links="links" />
-    </h1>
+    <br>
+    <div style="height: 100px;">丢包率:{{ lossRate }}%</div>
   </div>
   <div class="dataZone">
     <lineCharts type="line1"/>
     <lineCharts type="line2"/>
   </div>
+  
 </template>
 
 
