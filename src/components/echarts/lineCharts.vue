@@ -1,27 +1,40 @@
 <script setup>
 import * as echarts from 'echarts'
 import { onMounted } from 'vue';
+import { getNetFlow } from '@/apis/netFlow'
+
+const getNetFlowData = async () => {
+  const res = await getNetFlow()
+  console.log(res)
+  return res
+}
 
 const props = defineProps({
-  data:{
+  type:{
     type: String,
     default: ""
   },
+  data:{
+    type: Number,
+    default: 0
+  }
+
 })
 
 let myChart
-const data = props.data
-console.log(data)
+const type = props.type
 
 onMounted(()=>{
-  myChart = echarts.init(document.getElementById(`${data}`));
-  console.log(document.getElementById('line'))
+  myChart = echarts.init(document.getElementById(`${type}`));
+  getNetFlowData().then(res => {
+    console.log(res)
+  })
 })
 // 初始化 ECharts 实例
 
 // 初始化横轴时间数据和初始折线数据
 var timeData = [new Date().toLocaleTimeString()];
-var lineData = [0];
+var lineData = [0,695,2143,3830,4325,4968];
 
 // 定义更新数据的函数
 function updateData() {
@@ -62,6 +75,6 @@ setInterval(updateData, 1000);
 </script>
 
 <template>
-  <div :id="data" style="height: 400px;width: 600px;"></div>
+  <div :id="type" style="height: 400px;width: 600px;"></div>
   <div>{{ this.data }}</div>
 </template>

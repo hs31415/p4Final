@@ -47,7 +47,7 @@ const option = {
     triggerOn: 'none',
     formatter: function(params) {
       return (
-        "节点名: " + params.data.name
+        params.data.name
       );
     }
   }

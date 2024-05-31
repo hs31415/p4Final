@@ -6,11 +6,21 @@ import myEcharts from '@/components/echarts/myEcharts.vue';
 import addNodeDialog from '@/components/dialog/addNodeDialog.vue';
 import addLinkDialog from '@/components/dialog/addLinkDialog.vue';
 import lineCharts from '@/components/echarts/lineCharts.vue';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 const data = ref([
   { 
     name: 'Switch 1',
+    symbol:"image://https://s3.bmp.ovh/imgs/2024/05/28/411f113ead146b9e.png",
+    symbolSize: [30, 30]
+  },
+  { 
+    name: 'Switch 2',
+    symbol:"image://https://s3.bmp.ovh/imgs/2024/05/28/411f113ead146b9e.png",
+    symbolSize: [30, 30]
+  },
+  { 
+    name: 'Switch 3',
     symbol:"image://https://s3.bmp.ovh/imgs/2024/05/28/411f113ead146b9e.png",
     symbolSize: [30, 30]
   },
@@ -23,14 +33,36 @@ const data = ref([
     name: 'Host 2' ,
     symbol:"image://https://s3.bmp.ovh/imgs/2024/05/28/1ec928c28a0248f0.png",
     symbolSize: [30, 30]
-  }
+  },
+  { 
+    name: 'Host 3' ,
+    symbol:"image://https://s3.bmp.ovh/imgs/2024/05/28/1ec928c28a0248f0.png",
+    symbolSize: [30, 30]
+  },
 ])
 
 const links = ref([
+  { source: 'Switch 1', target: 'Switch 2' },
+  { source: 'Switch 1', target: 'Switch 3' },
+  { source: 'Switch 2', target: 'Switch 3' },
   { source: 'Switch 1', target: 'Host 1' },
-  { source: 'Switch 1', target: 'Host 2' }
+  { source: 'Switch 2', target: 'Host 2' },
+  { source: 'Switch 3', target: 'Host 3' },
 ])
 
+import { getNetFlow } from '@/apis/netFlow'
+
+const getNetFlowData = async () => {
+  const res = await getNetFlow()
+  console.log(res)
+  return res
+}
+
+onMounted(()=>{
+  getNetFlowData().then(res => {
+    console.log(res)
+  })
+})
 
 
 </script>
@@ -47,8 +79,8 @@ const links = ref([
     </h1>
   </div>
   <div class="dataZone">
-    <lineCharts data="line1"/>
-    <lineCharts data="line2"/>
+    <lineCharts type="line1"/>
+    <lineCharts type="line2"/>
   </div>
 </template>
 
